@@ -4,35 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catch Ghost | Intelligence Portal</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap" rel="stylesheet">
+    
     <style>
-   <style>
-  .logo {
-    font-family: 'JetBrains Mono', monospace; /* Check these quotes! */
-    font-weight: 800;
-    font-size: 1.5rem;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
-    letter-spacing: -2px;
-  }
-  .logo-ghost {
-    color: #38bdf8;
-    opacity: 0.7;
-  }
-</style>
+        body { background: #0a0a0c; color: #f8fafc; font-family: 'JetBrains Mono', monospace; margin: 0; padding: 0; }
+        .header { padding: 30px; text-align: center; border-bottom: 1px solid #1e293b; background: #111; }
+        
+        /* The Logo */
+        .logo { font-weight: 800; font-size: 2rem; color: #fff; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); letter-spacing: -2px; }
+        .logo-ghost { color: #38bdf8; opacity: 0.8; }
+        
+        /* The Feed & Cards */
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        .card { background: #111; border: 1px solid #1e293b; padding: 25px; margin-bottom: 25px; border-radius: 8px; }
+        
+        /* The Stars */
+        .meta { color: #fbbf24; font-size: 0.85rem; margin-bottom: 15px; font-weight: bold; }
+        .review { font-size: 1.1rem; margin-bottom: 20px; font-style: italic; border-left: 2px solid #333; padding-left: 15px; }
+        
+        /* The Intelligence Strategy Box */
+        .strategy { background: #000; padding: 20px; border-left: 2px solid #38bdf8; color: #94a3b8; font-size: 0.95rem; line-height: 1.6; }
+        label { display: block; color: #38bdf8; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 10px; font-weight: bold; letter-spacing: 1px; }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo">👻 CATCH GHOST</div>
-        <p>Real-Time Reputation Scouting</p>
+        <div class="logo">👻 CATCH<span class="logo-ghost">GHOST</span></div>
+        <p style="color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;">Real-Time Reputation Scouting</p>
     </div>
 
     <div class="container" id="ghost-feed">
-        <p style="text-align:center;">Connecting to Ghost database...</p>
+        <p style="text-align:center; color: #94a3b8;">Connecting to Ghost database...</p>
     </div>
 
     <script>
-       
         const API_URL = "https://script.google.com/macros/s/AKfycbwCQf1wcf7wBZu-0YDlStnOQ1l90Jzxo8WJJleD1ApFSqcqksFiyNLszbenwik2BKnH/exec";
 
         async function fetchScouts() {
@@ -55,11 +61,12 @@
                     `;
                 });
             } catch (e) {
-                document.getElementById('ghost-feed').innerHTML = "Error loading intelligence feed.";
+                document.getElementById('ghost-feed').innerHTML = "<div style='color:red; text-align:center;'>Error loading intelligence feed.</div>";
             }
         }
         fetchScouts();
     </script>
 </body>
 </html>
+
 
