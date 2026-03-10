@@ -39,7 +39,7 @@
                 data.forEach(item => {
                     feed.innerHTML += `
                         <div class="card">
-                            <div class="meta">${item.date} | ${item.rating} Stars</div>
+                            <div class="meta">${item.date} | ${"★".repeat(item.rating)}${"☆".repeat(5 - item.rating)}</div>
                             <div class="review">"${item.review}"</div>
                             <div class="strategy">
                                 <label>Ghost Intelligence Strategy</label>
@@ -56,4 +56,3 @@
     </script>
 </body>
 </html>
-
