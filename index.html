@@ -25,52 +25,91 @@
             align-items: center;
         }
 
-        /* --- PHASE 1: HEADER --- */
+        /* --- PHASE 1 REVISED: HEADER --- */
         header {
-            text-align: center;
-            padding: 60px 20px;
-            width: 100%;
-            background: linear-gradient(180deg, rgba(0,255,255,0.05) 0%, rgba(11,13,15,1) 100%);
+            width: 90%;
+            max-width: 500px; /* Matching the feed width for mobile alignment */
+            padding: 30px 20px;
+            display: flex;
+            align-items: center; /* Aligns logo and text vertically */
+            justify-content: flex-start; /* Pushes everything to the left */
+            gap: 20px; /* Space between logo and text */
+            background: linear-gradient(180deg, rgba(0,255,255,0.03) 0%, rgba(11,13,15,1) 100%);
         }
 
         .brand-logo {
-            width: 100px;
+            width: 150px; /* 1.5x larger than the previous 100px */
             height: auto;
             border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-            margin-bottom: 20px;
-        }
-
-        .tagline {
-            color: var(--ghost-cyan);
-            font-weight: 300;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.25);
         }
 
         h1 {
-            font-size: 2rem;
-            margin: 0;
+            font-size: 1rem; /* Half the size of the previous 2rem */
             font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+            color: var(--text-main);
         }
 
-        .scout-btn {
-            background: var(--ghost-cyan);
-            color: black;
+        /* --- PHASE 2 REVISED: HERO ACTION & FEED --- */
+        
+        /* New Animated Button Container */
+        .hero-action-container {
+            width: 90%;
+            max-width: 500px;
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+            margin-bottom: 10px;
+        }
+
+        .animated-scout-btn {
+            position: relative;
+            width: 100%;
+            padding: 20px;
             border: none;
-            padding: 15px 40px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 50px;
+            border-radius: 12px;
             cursor: pointer;
-            margin-top: 30px;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-            transition: 0.2s;
+            overflow: hidden; /* Keeps the video inside the button */
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* --- PHASE 2: CARDS --- */
+        .animated-scout-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+        }
+
+        /* The Background Video */
+        .btn-video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Video covers the whole button */
+            transform: translate(-50%, -50%);
+            z-index: 1; /* Puts the video below the text */
+            filter: brightness(0.7); /* Dims the video slightly for better text contrast */
+        }
+
+        /* The Button Text */
+        .btn-text {
+            position: relative;
+            z-index: 2; /* Puts the text above the video */
+            color: var(--ghost-cyan);
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8); /* Glow effect for the text */
+        }
+
+        /* Rest of the Feed (UNCHANGED from previous update) */
         .feed-container {
             width: 90%;
             max-width: 500px;
@@ -83,7 +122,7 @@
             margin-bottom: 15px;
             padding: 20px;
             cursor: pointer;
-            border-left: 4px solid var(--ghost-cyan); /* Default Glow */
+            border-left: 4px solid var(--ghost-cyan);
             transition: all 0.3s ease;
             overflow: hidden;
             position: relative;
@@ -114,7 +153,6 @@
             overflow: hidden;
         }
 
-        /* Expanded State */
         .interaction-card.active {
             cursor: default;
         }
@@ -158,10 +196,17 @@
 
     <header>
         <img src="logo.png" alt="Catch Ghost Logo" class="brand-logo">
-        <div class="tagline">Reputation Intelligence</div>
         <h1>Small Business Automation</h1>
-        <button class="scout-btn">SCOUT MY BUSINESS</button>
     </header>
+
+    <div class="hero-action-container">
+        <button class="animated-scout-btn">
+            <video autoplay loop muted playsinline class="btn-video-bg">
+                <source src="Animation_Generation_and_Delivery.mp4" type="video/mp4">
+            </video>
+            <span class="btn-text">SCOUT MY BUSINESS</span>
+        </button>
+    </div>
 
     <div class="feed-container">
         <div class="interaction-card" onclick="this.classList.toggle('active')">
