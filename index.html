@@ -25,93 +25,78 @@
             align-items: center;
         }
 
-        /* --- PHASE 1 REVISED: HEADER --- */
+        /* --- HEADER --- */
         header {
             width: 90%;
-            max-width: 500px; /* Matching the feed width for mobile alignment */
+            max-width: 500px;
             padding: 30px 20px;
             display: flex;
-            align-items: center; /* Aligns logo and text vertically */
-            justify-content: flex-start; /* Pushes everything to the left */
-            gap: 20px; /* Space between logo and text */
-            background: linear-gradient(180deg, rgba(0,255,255,0.03) 0%, rgba(11,13,15,1) 100%);
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
         }
 
         .brand-logo {
-            width: 150px; /* 1.5x larger than the previous 100px */
+            width: 150px; /* 1.5x Size */
             height: auto;
             border-radius: 12px;
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.25);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
         }
 
         h1 {
-            font-size: 1rem; /* Half the size of the previous 2rem */
+            font-size: 1.1rem; /* Half size as requested */
             font-weight: 700;
             margin: 0;
-            line-height: 1.2;
-            color: var(--text-main);
+            line-height: 1.3;
+            max-width: 150px; /* Forces wrap to look clean next to logo */
         }
 
-        /* --- PHASE 2 REVISED: HERO ACTION & FEED --- */
-        
-        /* New Animated Button Container */
+        /* --- HERO BUTTON --- */
         .hero-action-container {
             width: 90%;
             max-width: 500px;
-            display: flex;
-            justify-content: center;
-            padding: 20px 0;
-            margin-bottom: 10px;
+            padding: 10px 0 30px 0;
         }
 
         .animated-scout-btn {
             position: relative;
             width: 100%;
-            padding: 20px;
+            height: 80px;
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            overflow: hidden; /* Keeps the video inside the button */
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .animated-scout-btn:active {
-            transform: scale(0.97);
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
-        }
-
-        /* The Background Video */
         .btn-video-bg {
             position: absolute;
             top: 50%;
             left: 50%;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Video covers the whole button */
+            object-fit: cover;
             transform: translate(-50%, -50%);
-            z-index: 1; /* Puts the video below the text */
-            filter: brightness(0.7); /* Dims the video slightly for better text contrast */
+            z-index: 1;
+            filter: brightness(0.6);
         }
 
-        /* The Button Text */
         .btn-text {
             position: relative;
-            z-index: 2; /* Puts the text above the video */
+            z-index: 2;
             color: var(--ghost-cyan);
             font-weight: bold;
             font-size: 1.1rem;
-            text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8); /* Glow effect for the text */
+            text-shadow: 0 0 10px rgba(0, 0, 0, 1);
         }
 
-        /* Rest of the Feed (UNCHANGED from previous update) */
+        /* --- INTERACTION CARDS --- */
         .feed-container {
-            width: 90%;
+            width: 95%;
             max-width: 500px;
             padding-bottom: 50px;
         }
@@ -123,18 +108,37 @@
             padding: 20px;
             cursor: pointer;
             border-left: 4px solid var(--ghost-cyan);
-            transition: all 0.3s ease;
-            overflow: hidden;
+            transition: 0.3s;
             position: relative;
         }
 
         .card-1star { border-left-color: var(--ghost-red); }
+
+        /* The Caret Indicator */
+        .card-caret {
+            position: absolute;
+            top: 25px;
+            right: 20px;
+            width: 12px;
+            height: 12px;
+            border-right: 2px solid #555;
+            border-bottom: 2px solid #555;
+            transform: rotate(45deg);
+            transition: 0.3s;
+        }
+
+        .interaction-card.active .card-caret {
+            transform: rotate(-135deg); /* Flips up when open */
+            top: 30px;
+            border-color: var(--ghost-cyan);
+        }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            padding-right: 25px; /* Room for caret */
         }
 
         .user-info { display: flex; align-items: center; gap: 10px; }
@@ -151,10 +155,6 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-        }
-
-        .interaction-card.active {
-            cursor: default;
         }
 
         .interaction-card.active .review-text {
@@ -179,6 +179,7 @@
             text-transform: uppercase;
             color: var(--ghost-cyan);
             margin-bottom: 5px;
+            font-weight: bold;
         }
 
         .response-box {
@@ -210,6 +211,7 @@
 
     <div class="feed-container">
         <div class="interaction-card" onclick="this.classList.toggle('active')">
+            <div class="card-caret"></div>
             <div class="card-header">
                 <div class="user-info">
                     <div class="user-pic"></div>
@@ -219,14 +221,17 @@
             </div>
             <div class="review-text">The service at Wynyard Starbucks today was exceptional. Thank you Sasi for being so helpful!</div>
             <div class="ghost-strategy">
-                <div class="strategy-label">Ghost Impact Summary</div>
-                <div style="font-size: 0.8rem;">Boosts local rank for "exceptional service" and "Wynyard".</div>
-                <div class="strategy-label" style="margin-top:10px;">Suggested Response</div>
-                <div class="response-box">We're delighted to hear about your experience! We'll be sure to pass your thanks to Sasi.</div>
+                <div class="strategy-label">Ghost Intelligence Strategy</div>
+                <div style="font-size: 0.8rem; margin-bottom: 10px;">
+                    <strong>SEO Impact:</strong> Boosts local authority for "Starbucks Wynyard" and "Exceptional Service".
+                </div>
+                <div class="strategy-label">Public Response</div>
+                <div class="response-box">We're delighted to hear about your exceptional service experience! We'll be sure to pass your thanks to Sasi.</div>
             </div>
         </div>
 
         <div class="interaction-card card-1star" onclick="this.classList.toggle('active')">
+            <div class="card-caret"></div>
             <div class="card-header">
                 <div class="user-info">
                     <div class="user-pic"></div>
@@ -236,10 +241,12 @@
             </div>
             <div class="review-text">Waited 20 minutes for a cold latte. Staff was completely uninterested in helping.</div>
             <div class="ghost-strategy" style="background: rgba(255, 49, 49, 0.05); border-color: rgba(255, 49, 49, 0.1);">
-                <div class="strategy-label" style="color: var(--ghost-red);">Action Required</div>
-                <div style="font-size: 0.8rem;">Negative impact on "wait time" keywords. Immediate professional apology needed.</div>
-                <div class="strategy-label" style="margin-top:10px; color: var(--ghost-red);">Suggested Response</div>
-                <div class="response-box">We apologize for the wait and the cold coffee, Mark. This isn't our usual standard.</div>
+                <div class="strategy-label" style="color: var(--ghost-red);">Urgent Action Required</div>
+                <div style="font-size: 0.8rem; margin-bottom: 10px;">
+                    <strong>SEO Risk:</strong> High. "Wait time" keywords can negatively impact local ranking.
+                </div>
+                <div class="strategy-label" style="color: var(--ghost-red);">Public Response</div>
+                <div class="response-box">We apologize for the wait and the cold coffee, Mark. This isn't our usual standard, and we're looking into it.</div>
             </div>
         </div>
     </div>
