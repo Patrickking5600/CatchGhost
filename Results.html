@@ -40,51 +40,50 @@
         const resultsFeed = document.getElementById('resultsFeed');
         const statusBox = document.getElementById('statusBox');
         const urlParams = new URLSearchParams(window.location.search);
-        const bizName = urlParams.get('name');
-        const bizAddr = urlParams.get('addr');
+        
+        // We are now using placeId (businessId) for precision
+        const placeId = urlParams.get('place_id'); 
 
         async function fetchGhostData() {
-            if(!bizName) { 
-                statusBox.innerText = "ERROR: NO BUSINESS DATA FOUND"; 
+            if(!placeId) { 
+                statusBox.innerText = "ERROR: NO PLACE ID PROVIDED"; 
                 return; 
             }
             
-            const SECRETARY_URL = "https://scoutbusiness-mvsj2hf6tq-uc.a.run.app";
+            // POINTING TO YOUR NEW MODULAR SECRETARY
+            const SECRETARY_URL = "https://us-central1-catchghostai.cloudfunctions.net/scoutBusiness";
 
             try {
-                const response = await fetch(`${SECRETARY_URL}?name=${encodeURIComponent(bizName)}&address=${encodeURIComponent(bizAddr || "")}`);
+                const response = await fetch(`${SECRETARY_URL}?businessId=${placeId}&industryType=bar`);
                 const responseJson = await response.json();
 
-                if (responseJson.data) {
-                    statusBox.innerText = `REPORT FOR: ${responseJson.data.name.toUpperCase()}`;
+                if (responseJson.success && responseJson.data) {
+                    const ai = responseJson.data; // This is the 'analysis' object from Gemini
+                    statusBox.innerText = `GHOST REPORT GENERATED`;
                     resultsFeed.innerHTML = "";
 
-                    // 1. Render the AI Ghost Intelligence First
-                    if (responseJson.data.ghost_analysis) {
-                        resultsFeed.innerHTML += `
-                            <div class="ai-intelligence-box">
-                                <div class="ai-header">⚡ Ghost Intelligence Report</div>
-                                <div class="ai-content">${marked.parse(responseJson.data.ghost_analysis)}</div>
-                            </div>
-                        `;
-                    }
+                    // 1. Render the Modular Intelligence Report
+                    resultsFeed.innerHTML += `
+                        <div class="ai-intelligence-box">
+                            <div class="ai-header">⚡ Executive Summary</div>
+                            <div class="ai-content">${ai.executive_summary}</div>
+                            
+                            <div class="ai-header" style="margin-top:20px; color:var(--ghost-red);">⚠️ Liability & Risk</div>
+                            <div class="ai-content">${Array.isArray(ai.liability_report.operational_risks) ? ai.liability_report.operational_risks.join('<br>') : ai.liability_report}</div>
+                            
+                            <div class="ai-header" style="margin-top:20px;">📈 SEO Opportunities</div>
+                            <div class="ai-content">${ai.seo_report.keyword_suggestions ? ai.seo_report.keyword_suggestions.join(', ') : 'Check dashboard for full details'}</div>
+                        </div>
+                    `;
 
-                    // 2. Render the Original Reviews below it
-                    if (responseJson.data.reviews && responseJson.data.reviews.length > 0) {
-                        responseJson.data.reviews.forEach(review => {
-                            resultsFeed.innerHTML += `
-                                <div class="interaction-card">
-                                    <div class="user-name">${review.author_name}</div>
-                                    <div class="stars">${"★".repeat(review.rating)}</div>
-                                    <div class="review-text">${review.text}</div>
-                                </div>`;
-                        });
-                    }
+                    // 2. Add a status update for the rating
+                    statusBox.innerText = `SCORE: ${ai.average_rating} / 5 | LATEST: ${new Date(ai.latest_review_date).toLocaleDateString()}`;
+
                 } else { 
-                    statusBox.innerText = "NO DATA FOUND"; 
+                    statusBox.innerText = "NO DATA FOUND IN CLOUD"; 
                 }
             } catch (error) { 
-                statusBox.innerText = "HUNT ERROR"; 
+                statusBox.innerText = "HUNT ERROR: CONNECTION FAILED"; 
                 console.error("Fetch Error:", error);
             }
         }
@@ -93,4 +92,5 @@
     </script>
 </body>
 </html>
+
 
