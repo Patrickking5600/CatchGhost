@@ -41,7 +41,7 @@
             if(!bizName || !bizAddr) { statusBox.innerText = "ERROR: NO BUSINESS DATA FOUND"; return; }
             
             // PASTE YOUR SECRETARY TRIGGER URL BELOW
-            const SECRETARY_URL = "https://scoutbusiness-mvsj2hf6tq-uc.a.run.apphttps://scoutbusiness-mvsj2hf6tq-uc.a.run.app";
+            const SECRETARY_URL = "https://scoutbusiness-mvsj2hf6tq-uc.a.run.app";
 
             try {
                 const response = await fetch(`${SECRETARY_URL}?businessName=${encodeURIComponent(bizName)}&address=${encodeURIComponent(bizAddr)}`);
@@ -68,5 +68,6 @@
     </script>
 </body>
 </html>
+
 
 
