@@ -46,21 +46,24 @@
             try {
                 const response = await fetch(`${SECRETARY_URL}?name=${encodeURIComponent(bizName)}&address=${encodeURIComponent(bizAddr)}`);
                 const data = await response.json();
-                if (data.reviews && data.reviews.length > 0) {
-                    statusBox.innerText = `REPORT FOR: ${data.business.toUpperCase()}`;
-                    resultsFeed.innerHTML = "";
-                    data.reviews.forEach(review => {
-                        resultsFeed.innerHTML += `
-                            <div class="interaction-card">
-                                <div class="user-name">${review.author_name}</div>
-                                <div class="stars">${"★".repeat(review.rating)}</div>
-                                <div class="review-text">${review.text}</div>
-                                <div class="ghost-strategy">
-                                    <div class="strategy-label">Ghost Intelligence Strategy</div>
-                                    <div style="font-size: 0.8rem; color: white;">Automation triggered for this review.</div>
-                                </div>
-                            </div>`;
-                    });
+                // We rename 'data' to 'responseJson' to avoid confusion with the folder inside it
+const responseJson = await response.json();
+
+// Check inside the 'data' folder for reviews
+if (responseJson.data && responseJson.data.reviews) {
+    statusBox.innerText = `REPORT FOR: ${responseJson.data.name.toUpperCase()}`;
+    resultsFeed.innerHTML = "";
+    
+    // Use responseJson.data.reviews to get the list
+    responseJson.data.reviews.forEach(review => {
+        resultsFeed.innerHTML += `
+            <div class="interaction-card">
+                <div class="user-name">${review.author_name}</div>
+                <div class="stars">${"★".repeat(review.rating)}</div>
+                <div class="review-text">${review.text}</div>
+            </div>`;
+    });
+}
                 } else { statusBox.innerText = "NO REVIEWS FOUND"; }
             } catch (error) { statusBox.innerText = "HUNT ERROR"; }
         }
@@ -68,6 +71,7 @@
     </script>
 </body>
 </html>
+
 
 
 
