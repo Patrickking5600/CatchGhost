@@ -25,7 +25,6 @@
             align-items: center;
         }
 
-        /* --- HEADER --- */
         header {
             width: 90%;
             max-width: 500px;
@@ -37,21 +36,20 @@
         }
 
         .brand-logo {
-            width: 150px; /* 1.5x Size */
+            width: 150px;
             height: auto;
             border-radius: 12px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
         }
 
         h1 {
-            font-size: 1.1rem; /* Half size as requested */
+            font-size: 1.1rem;
             font-weight: 700;
             margin: 0;
             line-height: 1.3;
-            max-width: 150px; /* Forces wrap to look clean next to logo */
+            max-width: 150px;
         }
 
-        /* --- HERO BUTTON --- */
         .hero-action-container {
             width: 90%;
             max-width: 500px;
@@ -70,6 +68,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            background: #000;
         }
 
         .btn-video-bg {
@@ -94,7 +93,6 @@
             text-shadow: 0 0 10px rgba(0, 0, 0, 1);
         }
 
-        /* --- INTERACTION CARDS --- */
         .feed-container {
             width: 95%;
             max-width: 500px;
@@ -112,59 +110,23 @@
             position: relative;
         }
 
-        .card-1star { border-left-color: var(--ghost-red); }
-
-        /* The Caret Indicator */
-        .card-caret {
-            position: absolute;
-            top: 25px;
-            right: 20px;
-            width: 12px;
-            height: 12px;
-            border-right: 2px solid #555;
-            border-bottom: 2px solid #555;
-            transform: rotate(45deg);
-            transition: 0.3s;
-        }
-
-        .interaction-card.active .card-caret {
-            transform: rotate(-135deg); /* Flips up when open */
-            top: 30px;
-            border-color: var(--ghost-cyan);
-        }
-
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
-            padding-right: 25px; /* Room for caret */
         }
 
-        .user-info { display: flex; align-items: center; gap: 10px; }
-        .user-pic { width: 35px; height: 35px; border-radius: 50%; background: #30363d; }
         .user-name { font-weight: bold; font-size: 0.9rem; }
         .stars { color: var(--ghost-cyan); font-size: 0.8rem; }
-        .stars-red { color: var(--ghost-red); }
 
         .review-text {
             font-size: 0.9rem;
             line-height: 1.4;
             color: #8b949e;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .interaction-card.active .review-text {
-            display: block;
-            color: white;
-            margin-bottom: 20px;
         }
 
         .ghost-strategy {
-            display: none;
             background: rgba(0, 255, 255, 0.05);
             border: 1px solid rgba(0, 255, 255, 0.1);
             border-radius: 8px;
@@ -172,24 +134,12 @@
             margin-top: 15px;
         }
 
-        .interaction-card.active .ghost-strategy { display: block; }
-
         .strategy-label {
             font-size: 0.7rem;
             text-transform: uppercase;
             color: var(--ghost-cyan);
             margin-bottom: 5px;
             font-weight: bold;
-        }
-
-        .response-box {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.85rem;
-            margin-top: 10px;
-            color: #c9d1d9;
         }
     </style>
 </head>
@@ -201,55 +151,58 @@
     </header>
 
     <div class="hero-action-container">
-        <button class="animated-scout-btn">
+        <button class="animated-scout-btn" id="scoutBtn">
             <video autoplay loop muted playsinline class="btn-video-bg">
                 <source src="Animation_Generation_and_Delivery.mp4" type="video/mp4">
             </video>
-            <span class="btn-text">SCOUT MY BUSINESS</span>
+            <span class="btn-text" id="btnText">SCOUT MY BUSINESS</span>
         </button>
     </div>
 
-    <div class="feed-container">
-        <div class="interaction-card" onclick="this.classList.toggle('active')">
-            <div class="card-caret"></div>
-            <div class="card-header">
-                <div class="user-info">
-                    <div class="user-pic"></div>
-                    <div class="user-name">Sarah Jenkins</div>
-                </div>
-                <div class="stars">★★★★★</div>
-            </div>
-            <div class="review-text">The service at Wynyard Starbucks today was exceptional. Thank you Sasi for being so helpful!</div>
-            <div class="ghost-strategy">
-                <div class="strategy-label">Ghost Intelligence Strategy</div>
-                <div style="font-size: 0.8rem; margin-bottom: 10px;">
-                    <strong>SEO Impact:</strong> Boosts local authority for "Starbucks Wynyard" and "Exceptional Service".
-                </div>
-                <div class="strategy-label">Public Response</div>
-                <div class="response-box">We're delighted to hear about your exceptional service experience! We'll be sure to pass your thanks to Sasi.</div>
-            </div>
+    <div class="feed-container" id="resultsFeed">
         </div>
 
-        <div class="interaction-card card-1star" onclick="this.classList.toggle('active')">
-            <div class="card-caret"></div>
-            <div class="card-header">
-                <div class="user-info">
-                    <div class="user-pic"></div>
-                    <div class="user-name">Mark Thompson</div>
-                </div>
-                <div class="stars stars-red">★☆☆☆☆</div>
-            </div>
-            <div class="review-text">Waited 20 minutes for a cold latte. Staff was completely uninterested in helping.</div>
-            <div class="ghost-strategy" style="background: rgba(255, 49, 49, 0.05); border-color: rgba(255, 49, 49, 0.1);">
-                <div class="strategy-label" style="color: var(--ghost-red);">Urgent Action Required</div>
-                <div style="font-size: 0.8rem; margin-bottom: 10px;">
-                    <strong>SEO Risk:</strong> High. "Wait time" keywords can negatively impact local ranking.
-                </div>
-                <div class="strategy-label" style="color: var(--ghost-red);">Public Response</div>
-                <div class="response-box">We apologize for the wait and the cold coffee, Mark. This isn't our usual standard, and we're looking into it.</div>
-            </div>
-        </div>
-    </div>
+    <script>
+        const scoutBtn = document.getElementById('scoutBtn');
+        const btnText = document.getElementById('btnText');
+        const resultsFeed = document.getElementById('resultsFeed');
 
+        // PASTE YOUR URL BETWEEN THE QUOTES BELOW
+        const SECRETARY_URL = "https://us-central1-catchghostai.cloudfunctions.net/scoutBusiness";
+
+        scoutBtn.addEventListener('click', async () => {
+            btnText.innerText = "SCOUTING...";
+            
+            try {
+                // Testing with a default business (Starbucks) for now
+                const response = await fetch(`${SECRETARY_URL}?businessName=Starbucks&address=Seattle`);
+                const data = await response.json();
+
+                if (data.reviews) {
+                    btnText.innerText = "SCOUT COMPLETE";
+                    
+                    // Clear old examples and show the first live review found
+                    resultsFeed.innerHTML = `
+                        <div class="interaction-card">
+                            <div class="card-header">
+                                <div class="user-name">${data.reviews[0].author_name}</div>
+                                <div class="stars">★★★★★</div>
+                            </div>
+                            <div class="review-text">${data.reviews[0].text}</div>
+                            <div class="ghost-strategy">
+                                <div class="strategy-label">Ghost Intelligence Strategy</div>
+                                <div style="font-size: 0.8rem; color: white;">
+                                    <strong>Status:</strong> Successfully pulled from ${data.business}.
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error(error);
+                btnText.innerText = "SCOUT ERROR";
+            }
+        });
+    </script>
 </body>
 </html>
