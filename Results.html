@@ -44,7 +44,7 @@
             const SECRETARY_URL = "https://scoutbusiness-mvsj2hf6tq-uc.a.run.app";
 
             try {
-                const response = await fetch(`${SECRETARY_URL}?businessName=${encodeURIComponent(bizName)}&address=${encodeURIComponent(bizAddr)}`);
+                const response = await fetch(`${SECRETARY_URL}?name=${encodeURIComponent(bizName)}&address=${encodeURIComponent(bizAddr)}`);
                 const data = await response.json();
                 if (data.reviews && data.reviews.length > 0) {
                     statusBox.innerText = `REPORT FOR: ${data.business.toUpperCase()}`;
@@ -68,6 +68,7 @@
     </script>
 </body>
 </html>
+
 
 
 
