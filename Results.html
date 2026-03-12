@@ -19,11 +19,15 @@
         .status-bar { width: 90%; max-width: 500px; padding: 15px; border-radius: 8px; background: rgba(0, 255, 255, 0.1); border: 1px solid var(--ghost-cyan); margin-bottom: 20px; text-align: center; font-size: 0.9rem; color: var(--ghost-cyan); letter-spacing: 1px; }
         .feed-container { width: 95%; max-width: 500px; }
         .interaction-card { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; padding: 20px; border-left: 4px solid var(--ghost-cyan); }
+        
+        /* New Styles for AI Intelligence Box */
+        .ai-intelligence-box { background: rgba(0, 255, 255, 0.05); border: 1px solid var(--ghost-cyan); border-radius: 12px; padding: 20px; margin-bottom: 25px; }
+        .ai-header { color: var(--ghost-cyan); font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .ai-content { font-size: 0.9rem; color: #e6edf3; line-height: 1.6; white-space: pre-wrap; }
+        
         .user-name { font-weight: bold; font-size: 0.9rem; margin-bottom: 5px;}
         .stars { color: var(--ghost-cyan); font-size: 0.8rem; margin-bottom: 10px;}
         .review-text { font-size: 0.9rem; color: #8b949e; line-height: 1.4; }
-        .ghost-strategy { background: rgba(0, 255, 255, 0.05); border-radius: 8px; padding: 15px; margin-top: 15px; border: 1px solid rgba(0, 255, 255, 0.1); }
-        .strategy-label { font-size: 0.7rem; color: var(--ghost-cyan); font-weight: bold; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -39,7 +43,7 @@
         const bizAddr = urlParams.get('addr');
 
         async function fetchGhostData() {
-            if(!bizName || !bizAddr) { 
+            if(!bizName) { 
                 statusBox.innerText = "ERROR: NO BUSINESS DATA FOUND"; 
                 return; 
             }
@@ -47,31 +51,36 @@
             const SECRETARY_URL = "https://scoutbusiness-mvsj2hf6tq-uc.a.run.app";
 
             try {
-                // FIXED: Using ?name= to match the Secretary's logic
-                const response = await fetch(`${SECRETARY_URL}?name=${encodeURIComponent(bizName)}&address=${encodeURIComponent(bizAddr)}`);
+                const response = await fetch(`${SECRETARY_URL}?name=${encodeURIComponent(bizName)}&address=${encodeURIComponent(bizAddr || "")}`);
                 const responseJson = await response.json();
 
-                // FIXED: Checking responseJson.data.reviews (the nested path)
-                if (responseJson.data && responseJson.data.reviews && responseJson.data.reviews.length > 0) {
-                    
+                if (responseJson.data) {
                     statusBox.innerText = `REPORT FOR: ${responseJson.data.name.toUpperCase()}`;
                     resultsFeed.innerHTML = "";
 
-                    responseJson.data.reviews.forEach(review => {
+                    // 1. Render the AI Ghost Intelligence First
+                    if (responseJson.data.ghost_analysis) {
                         resultsFeed.innerHTML += `
-                            <div class="interaction-card">
-                                <div class="user-name">${review.author_name}</div>
-                                <div class="stars">${"★".repeat(review.rating)}</div>
-                                <div class="review-text">${review.text}</div>
-                                <div class="ghost-strategy">
-                                    <div class="strategy-label">Ghost Intelligence Strategy</div>
-                                    <div style="font-size: 0.8rem; color: white;">Automation triggered for this review.</div>
-                                </div>
-                            </div>`;
-                    });
+                            <div class="ai-intelligence-box">
+                                <div class="ai-header">⚡ Ghost Intelligence Report</div>
+                                <div class="ai-content">${responseJson.data.ghost_analysis}</div>
+                            </div>
+                        `;
+                    }
+
+                    // 2. Render the Original Reviews below it
+                    if (responseJson.data.reviews && responseJson.data.reviews.length > 0) {
+                        responseJson.data.reviews.forEach(review => {
+                            resultsFeed.innerHTML += `
+                                <div class="interaction-card">
+                                    <div class="user-name">${review.author_name}</div>
+                                    <div class="stars">${"★".repeat(review.rating)}</div>
+                                    <div class="review-text">${review.text}</div>
+                                </div>`;
+                        });
+                    }
                 } else { 
-                    statusBox.innerText = "NO REVIEWS FOUND"; 
-                    console.log("Response received but no reviews:", responseJson);
+                    statusBox.innerText = "NO DATA FOUND"; 
                 }
             } catch (error) { 
                 statusBox.innerText = "HUNT ERROR"; 
