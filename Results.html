@@ -37,60 +37,65 @@
     <div class="feed-container" id="resultsFeed"></div>
 
     <script>
-        const resultsFeed = document.getElementById('resultsFeed');
-        const statusBox = document.getElementById('statusBox');
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // We are now using placeId (businessId) for precision
-        const placeId = urlParams.get('place_id'); 
+const resultsFeed = document.getElementById('resultsFeed');
+const statusBox = document.getElementById('statusBox');
+const urlParams = new URLSearchParams(window.location.search);
+const placeId = urlParams.get('place_id'); 
 
-        async function fetchGhostData() {
-            if(!placeId) { 
-                statusBox.innerText = "ERROR: NO PLACE ID PROVIDED"; 
-                return; 
-            }
+async function fetchGhostData() {
+    if(!placeId) { 
+        statusBox.innerText = "ERROR: NO PLACE ID PROVIDED"; 
+        return; 
+    }
+    
+    const SECRETARY_URL = "https://us-central1-catchghostai.cloudfunctions.net/scoutBusiness";
+
+    try {
+        // We send businessId (which is the place_id) to the Secretary
+        const response = await fetch(`${SECRETARY_URL}?businessId=${placeId}&industryType=bar`);
+        const responseJson = await response.json();
+
+        if (responseJson.success && responseJson.data) {
+            const ai = responseJson.data; 
             
-            // POINTING TO YOUR NEW MODULAR SECRETARY
-            const SECRETARY_URL = "https://us-central1-catchghostai.cloudfunctions.net/scoutBusiness";
+            // Set the Score at the top
+            statusBox.innerHTML = `SCORE: ${ai.average_rating} / 5 <span style="margin-left:15px; opacity:0.6;">|</span> LATEST: ${new Date(ai.latest_review_date).toLocaleDateString()}`;
+            
+            resultsFeed.innerHTML = "";
 
-            try {
-                const response = await fetch(`${SECRETARY_URL}?businessId=${placeId}&industryType=bar`);
-                const responseJson = await response.json();
+            // Helper to handle both lists and paragraphs from the AI
+            const formatContent = (data) => {
+                if (Array.isArray(data)) return marked.parse(data.join('\n'));
+                return marked.parse(data || "No data available");
+            };
 
-                if (responseJson.success && responseJson.data) {
-                    const ai = responseJson.data; // This is the 'analysis' object from Gemini
-                    statusBox.innerText = `GHOST REPORT GENERATED`;
-                    resultsFeed.innerHTML = "";
+            // Render the Modular Intelligence Report
+            resultsFeed.innerHTML += `
+                <div class="ai-intelligence-box">
+                    <div class="ai-header">⚡ Executive Summary</div>
+                    <div class="ai-content">${formatContent(ai.executive_summary)}</div>
+                    
+                    <div class="ai-header" style="margin-top:20px; color:var(--ghost-red);">⚠️ Liability & Risk</div>
+                    <div class="ai-content">${formatContent(ai.liability_report.operational_risks || ai.liability_report)}</div>
+                    
+                    <div class="ai-header" style="margin-top:20px;">📈 SEO Opportunities</div>
+                    <div class="ai-content">${formatContent(ai.seo_report.keyword_suggestions || ai.seo_report)}</div>
+                </div>
+            `;
 
-                    // 1. Render the Modular Intelligence Report
-                    resultsFeed.innerHTML += `
-                        <div class="ai-intelligence-box">
-                            <div class="ai-header">⚡ Executive Summary</div>
-                            <div class="ai-content">${ai.executive_summary}</div>
-                            
-                            <div class="ai-header" style="margin-top:20px; color:var(--ghost-red);">⚠️ Liability & Risk</div>
-                            <div class="ai-content">${Array.isArray(ai.liability_report.operational_risks) ? ai.liability_report.operational_risks.join('<br>') : ai.liability_report}</div>
-                            
-                            <div class="ai-header" style="margin-top:20px;">📈 SEO Opportunities</div>
-                            <div class="ai-content">${ai.seo_report.keyword_suggestions ? ai.seo_report.keyword_suggestions.join(', ') : 'Check dashboard for full details'}</div>
-                        </div>
-                    `;
-
-                    // 2. Add a status update for the rating
-                    statusBox.innerText = `SCORE: ${ai.average_rating} / 5 | LATEST: ${new Date(ai.latest_review_date).toLocaleDateString()}`;
-
-                } else { 
-                    statusBox.innerText = "NO DATA FOUND IN CLOUD"; 
-                }
-            } catch (error) { 
-                statusBox.innerText = "HUNT ERROR: CONNECTION FAILED"; 
-                console.error("Fetch Error:", error);
-            }
+        } else { 
+            statusBox.innerText = "NO DATA FOUND IN CLOUD"; 
         }
+    } catch (error) { 
+        statusBox.innerText = "HUNT ERROR: CONNECTION FAILED"; 
+        console.error("Fetch Error:", error);
+    }
+}
 
-        fetchGhostData();
+fetchGhostData();
     </script>
 </body>
 </html>
+
 
 
