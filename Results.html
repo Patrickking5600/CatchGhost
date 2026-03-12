@@ -30,6 +30,7 @@
     <header><img src="logo.png" alt="Catch Ghost Logo" class="brand-logo"></header>
     <div class="status-bar" id="statusBox">GHOST ANALYSIS IN PROGRESS...</div>
     <div class="feed-container" id="resultsFeed"></div>
+
     <script>
         const resultsFeed = document.getElementById('resultsFeed');
         const statusBox = document.getElementById('statusBox');
@@ -38,41 +39,47 @@
         const bizAddr = urlParams.get('addr');
 
         async function fetchGhostData() {
-            if(!bizName || !bizAddr) { statusBox.innerText = "ERROR: NO BUSINESS DATA FOUND"; return; }
+            if(!bizName || !bizAddr) { 
+                statusBox.innerText = "ERROR: NO BUSINESS DATA FOUND"; 
+                return; 
+            }
             
-            // PASTE YOUR SECRETARY TRIGGER URL BELOW
             const SECRETARY_URL = "https://scoutbusiness-mvsj2hf6tq-uc.a.run.app";
 
             try {
+                // FIXED: Using ?name= to match the Secretary's logic
                 const response = await fetch(`${SECRETARY_URL}?name=${encodeURIComponent(bizName)}&address=${encodeURIComponent(bizAddr)}`);
-                const data = await response.json();
-                // We rename 'data' to 'responseJson' to avoid confusion with the folder inside it
-const responseJson = await response.json();
+                const responseJson = await response.json();
 
-// Check inside the 'data' folder for reviews
-if (responseJson.data && responseJson.data.reviews) {
-    statusBox.innerText = `REPORT FOR: ${responseJson.data.name.toUpperCase()}`;
-    resultsFeed.innerHTML = "";
-    
-    // Use responseJson.data.reviews to get the list
-    responseJson.data.reviews.forEach(review => {
-        resultsFeed.innerHTML += `
-            <div class="interaction-card">
-                <div class="user-name">${review.author_name}</div>
-                <div class="stars">${"★".repeat(review.rating)}</div>
-                <div class="review-text">${review.text}</div>
-            </div>`;
-    });
-}
-                } else { statusBox.innerText = "NO REVIEWS FOUND"; }
-            } catch (error) { statusBox.innerText = "HUNT ERROR"; }
+                // FIXED: Checking responseJson.data.reviews (the nested path)
+                if (responseJson.data && responseJson.data.reviews && responseJson.data.reviews.length > 0) {
+                    
+                    statusBox.innerText = `REPORT FOR: ${responseJson.data.name.toUpperCase()}`;
+                    resultsFeed.innerHTML = "";
+
+                    responseJson.data.reviews.forEach(review => {
+                        resultsFeed.innerHTML += `
+                            <div class="interaction-card">
+                                <div class="user-name">${review.author_name}</div>
+                                <div class="stars">${"★".repeat(review.rating)}</div>
+                                <div class="review-text">${review.text}</div>
+                                <div class="ghost-strategy">
+                                    <div class="strategy-label">Ghost Intelligence Strategy</div>
+                                    <div style="font-size: 0.8rem; color: white;">Automation triggered for this review.</div>
+                                </div>
+                            </div>`;
+                    });
+                } else { 
+                    statusBox.innerText = "NO REVIEWS FOUND"; 
+                    console.log("Response received but no reviews:", responseJson);
+                }
+            } catch (error) { 
+                statusBox.innerText = "HUNT ERROR"; 
+                console.error("Fetch Error:", error);
+            }
         }
+
         fetchGhostData();
     </script>
 </body>
 </html>
-
-
-
-
-
